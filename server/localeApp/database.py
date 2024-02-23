@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from instance.config import DATABASE_URI
 
+
 SQLALCHEMY_DATABASE_URL = DATABASE_URI
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

@@ -2,9 +2,10 @@ from fastapi import FastAPI, HTTPException, APIRouter
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker
-from .database import SessionLocal
+from .database import SessionLocal,Base
 from instance.config import SECRET_KEY, DATABASE_URI
 from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="Locale", description="Know Nigeria by the roads!")
 

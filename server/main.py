@@ -1,6 +1,7 @@
 import os
 from localeApp import app, engine, models
 from localeApp.models import Base
+from localeApp.data import populate_database
 from instance.config import SECRET_KEY, DATABASE_URI
 from dotenv import load_dotenv
 from sqlalchemy import inspect
@@ -17,6 +18,7 @@ print("Database URI:", DATABASE_URI)
 # Base.metadata.drop_all(bind=engine)
 
 Base.metadata.create_all(bind = engine)
+populate_database()
 
 print("Tables created")
 

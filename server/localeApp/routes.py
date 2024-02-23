@@ -28,68 +28,6 @@ logger = logging.getLogger(__name__)
 
 
 
-def fetch_data_from_google_maps_api():
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
-    params = {
-        "address": "Nigeria",
-        "key": GOOGLE_MAPS_API_KEY
-    }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    
-    # Print or log the response content
-    print(response.json())
-
-    return response.json().get("results", [])
-
-fetch_data_from_google_maps_api()
-
-
-
-def process_and_store_data():
-    regions, states, lgas = fetch_data_from_google_maps_api()
-    session = SessionLocal()
-
-    try:
-        #  regions
-        for region_name in regions:
-            region = Region(name=region_name)
-            session.add(region)
-
-        #  states
-        for state_name in states:
-            state = State(name=state_name)
-            session.add(state)
-
-        #  LGAs
-        for lga_name in lgas:
-            lga = LGA(name=lga_name)
-            session.add(lga)
-
-        session.commit()
-        print("Data successfully stored in the database.")
-
-    except Exception as e:
-        session.rollback()
-        print(f"Error storing data in the database: {e}")
-
-    finally:
-        session.close()
-
-
-def refresh_data_periodically():
-    while True:
-        try:
-            process_and_store_data()
-            print(f"Data refreshed at {datetime.now()}")
-        except Exception as e:
-            print(f"Error refreshing data: {e}")
-
-        time.sleep(604800)
-
-# refresh_data_periodically()
-
-
 
 
 #    E  N  D  P  O  I  N  T  S
@@ -186,7 +124,7 @@ async def get_region(region_id: int, db: Session = Depends(get_db), user: User =
     Returns:
     - region (dict): Dictionary containing the region.
     """
-    region = db.query(Region).filter(Region.id == region_id).first()
+    region = db.query(Region).filter(Region.region_id == region_id).first()
     if not region:
         raise HTTPException(status_code=404, detail="Region not found")
     return region
@@ -214,7 +152,7 @@ async def get_state(state_id: int, db: Session = Depends(get_db), user: User = D
     Returns:
     - state (dict): Dictionary containing the state.
     """
-    state = db.query(State).filter(State.id == state_id).first()
+    state = db.query(State).filter(State.state_id == state_id).first()
     if not state:
         raise HTTPException(status_code=404, detail="State not found")
     return state
@@ -242,7 +180,7 @@ async def get_lga(lga_id: int, db: Session = Depends(get_db), user: User = Depen
     Returns:
     - lga (dict): Dictionary containing the LGA.
     """
-    lga = db.query(LGA).filter(LGA.id == lga_id).first()
+    lga = db.query(LGA).filter(LGA.lga_id == lga_id).first()
     if not lga:
         raise HTTPException(status_code=404, detail="LGA not found")
     return lga
