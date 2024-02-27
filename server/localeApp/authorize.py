@@ -1,10 +1,13 @@
 from jose import jwt
 from datetime import datetime, timedelta
+from typing import Annotated
+from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from starlette import status
 from sqlalchemy.orm import Session
 from localeApp import SECRET_KEY
-from localeApp.models import User
+from localeApp.models import Users
 
 
 SECRET_KEY = SECRET_KEY
@@ -16,18 +19,26 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def create_access_token(data: dict):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    try:
+        to_encode = data.copy()
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        to_encode.update({"exp": expire})
+        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        return encoded_jwt
+    except jwt.EncodeError as e:
+        print(f"Access Token Creation Error: {e}")
+        raise
 
 
 def authenticate_user(db: Session, email: str, password: str):
-    user = db.query(User).filter(User.user_email == email).first()
-    if not user or not user.verify_password(password):
-        return None
-    return user
+    try:
+        user = db.query(Users).filter(Users.email == email).first()
+        if not user or not user.verify_password(password):
+            return None
+        return user
+    except jwt.EncodeError as e:
+        print(f"User Authentication Error: {e}")
+        raise
 
 def verify_token(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -39,7 +50,9 @@ def verify_token(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         return payload
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as e:
+        print(f"jwt.ExpiredSignatureError: {e}")
         raise credentials_exception
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as e:
+        print(f"jwt.InvalidTokenError: {e}")
         raise credentials_exception

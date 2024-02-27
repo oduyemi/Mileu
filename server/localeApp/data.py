@@ -13,51 +13,59 @@ def populate_database():
         Region(region_name="South East"),
         Region(region_name="South West"),
         ]
-        session.add_all(nigeria_regions)
+
+        for region in nigeria_regions:
+            existing_region = session.query(Region).filter_by(region_name=region.region_name).first()
+            if not existing_region:
+                session.add(region)
         session.commit()
 
         region_id_map = {region.region_name: region.region_id for region in nigeria_regions}
 
         nigeria_states = [
-            State(state_name="Abia", state_region_id=region_id_map["South East"]),
-            State(state_name="Adamawa", state_region_id=region_id_map["North East"]),
-            State(state_name="Akwa Ibom", state_region_id=region_id_map["South South"]),
-            State(state_name="Anambra", state_region_id=region_id_map["South East"]),
-            State(state_name="Bauchi", state_region_id=region_id_map["North East"]),
-            State(state_name="Bayelsa", state_region_id=region_id_map["South South"]),
-            State(state_name="Benue", state_region_id=region_id_map["North Central"]),
-            State(state_name="Borno", state_region_id=region_id_map["North East"]),
-            State(state_name="Cross River", state_region_id=region_id_map["South South"]),
-            State(state_name="Delta", state_region_id=region_id_map["South South"]),
-            State(state_name="Ebonyi", state_region_id=region_id_map["South East"]),
-            State(state_name="Edo", state_region_id=region_id_map["South South"]),
-            State(state_name="Ekiti", state_region_id=region_id_map["South West"]),
-            State(state_name="Enugu", state_region_id=region_id_map["South East"]),
-            State(state_name="Gomnbe", state_region_id=region_id_map["North East"]),
-            State(state_name="Imo", state_region_id=region_id_map["South East"]),
-            State(state_name="Jigawa", state_region_id=region_id_map["North West"]),
-            State(state_name="Kaduna", state_region_id=region_id_map["North West"]),
-            State(state_name="Kano", state_region_id=region_id_map["North West"]),
-            State(state_name="Katsina", state_region_id=region_id_map["North West"]),
-            State(state_name="Kebbi", state_region_id=region_id_map["North West"]),
-            State(state_name="Kogi", state_region_id=region_id_map["North Central"]),
-            State(state_name="Kwara", state_region_id=region_id_map["North Central"]),
-            State(state_name="Lagos", state_region_id=region_id_map["South West"]),
-            State(state_name="Nassarawa",state_region_id=region_id_map["North Central"]),
-            State(state_name="Niger", state_region_id=region_id_map["North Central"]),
-            State(state_name="Ogun", state_region_id=region_id_map["South West"]),
-            State(state_name="Ondo", state_region_id=region_id_map["South West"]),
-            State(state_name="Osun", state_region_id=region_id_map["South West"]),
-            State(state_name="Oyo", state_region_id=region_id_map["South West"]),
-            State(state_name="Plateau", state_region_id=region_id_map["North Central"]),
-            State(state_name="Rivers", state_region_id=region_id_map["South South"]),
-            State(state_name="Sokoto", state_region_id=region_id_map["North West"]),
-            State(state_name="Taraba", state_region_id=region_id_map["North East"]),
-            State(state_name="Yobe", state_region_id=region_id_map["North East"]),
-            State(state_name="Zamfara", state_region_id=region_id_map["North West"]),
-            State(state_name="Abuja (FCT)", state_region_id=region_id_map["North Central"]),
+            State(state_name="Abia", state_capital="Umuahia", state_region_id=region_id_map["South East"]),
+            State(state_name="Adamawa", state_capital="Yola", state_region_id=region_id_map["North East"]),
+            State(state_name="Akwa Ibom", state_capital="Uyo", state_region_id=region_id_map["South South"]),
+            State(state_name="Anambra", state_capital="Awka", state_region_id=region_id_map["South East"]),
+            State(state_name="Bauchi", state_capital="Bauchi", state_region_id=region_id_map["North East"]),
+            State(state_name="Bayelsa", state_capital="Yenegoa", state_region_id=region_id_map["South South"]),
+            State(state_name="Benue", state_capital="Makurdi", state_region_id=region_id_map["North Central"]),
+            State(state_name="Borno", state_capital="Maiduguri", state_region_id=region_id_map["North East"]),
+            State(state_name="Cross River", state_capital="Calabar", state_region_id=region_id_map["South South"]),
+            State(state_name="Delta", state_capital="Asaba", state_region_id=region_id_map["South South"]),
+            State(state_name="Ebonyi", state_capital="Abakaliki", state_region_id=region_id_map["South East"]),
+            State(state_name="Edo", state_capital="Benin", state_region_id=region_id_map["South South"]),
+            State(state_name="Ekiti", state_capital="Ado Ekiti", state_region_id=region_id_map["South West"]),
+            State(state_name="Enugu", state_capital="Enugu", state_region_id=region_id_map["South East"]),
+            State(state_name="Gombe", state_capital="Gombe", state_region_id=region_id_map["North East"]),
+            State(state_name="Imo", state_capital="Owerri", state_region_id=region_id_map["South East"]),
+            State(state_name="Jigawa", state_capital="Dutse", state_region_id=region_id_map["North West"]),
+            State(state_name="Kaduna", state_capital="Kaduna", state_region_id=region_id_map["North West"]),
+            State(state_name="Kano", state_capital="Kano", state_region_id=region_id_map["North West"]),
+            State(state_name="Katsina", state_capital="Katsina", state_region_id=region_id_map["North West"]),
+            State(state_name="Kebbi",state_capital="Birnin Kebbi",  state_region_id=region_id_map["North West"]),
+            State(state_name="Kogi", state_capital="Lokoja", state_region_id=region_id_map["North Central"]),
+            State(state_name="Kwara", state_capital="Ilorin", state_region_id=region_id_map["North Central"]),
+            State(state_name="Lagos", state_capital="Ikeja", state_region_id=region_id_map["South West"]),
+            State(state_name="Nassarawa", state_capital="Lafia", state_region_id=region_id_map["North Central"]),
+            State(state_name="Niger", state_capital="Minna", state_region_id=region_id_map["North Central"]),
+            State(state_name="Ogun", state_capital="Abeokuta", state_region_id=region_id_map["South West"]),
+            State(state_name="Ondo", state_capital="Akure", state_region_id=region_id_map["South West"]),
+            State(state_name="Osun", state_capital="Oshogbo", state_region_id=region_id_map["South West"]),
+            State(state_name="Oyo", state_capital="Ibadan", state_region_id=region_id_map["South West"]),
+            State(state_name="Plateau", state_capital="Jos", state_region_id=region_id_map["North Central"]),
+            State(state_name="Rivers", state_capital="Port Harcourt", state_region_id=region_id_map["South South"]),
+            State(state_name="Sokoto", state_capital="Sokoto", state_region_id=region_id_map["North West"]),
+            State(state_name="Taraba", state_capital="Jalingo", state_region_id=region_id_map["North East"]),
+            State(state_name="Yobe", state_capital="Damaturu", state_region_id=region_id_map["North East"]),
+            State(state_name="Zamfara", state_capital="Gusau", state_region_id=region_id_map["North West"]),
+            State(state_name="Abuja (FCT)", state_capital="Abuja", state_region_id=region_id_map["North Central"]),
         ]
-        session.add_all(nigeria_states)
+
+        for state in nigeria_states:
+            existing_state = session.query(State).filter_by(state_name=state.state_name).first()
+            if not existing_state:
+                session.add(state)
         session.commit()
         
         # Add LGAs
@@ -850,7 +858,12 @@ def populate_database():
             LGA(lga_name="Aboh-Mbaise", lga_stateid=16),
             LGA(lga_name="Odukpani", lga_stateid=9),
         ]
-        session.add_all(nigeria_lgas)
+        
+        for lga in nigeria_lgas:
+            existing_lga = session.query(LGA).filter_by(lga_name=lga.lga_name).first()
+            if not existing_lga:
+                session.add(lga)
+
         session.commit()
         
     except Exception as e:

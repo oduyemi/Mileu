@@ -7,15 +7,28 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-class UserRequest(BaseModel):
-    fname: str
-    lname: str
-    email: str
-    pwd: str
-
 class UserResponse(BaseModel):
     id: int
-    fname: str
-    lname: str
+    firstName: str
+    lastName: str
     email: str
-    hashed_pwd: str
+    hashedPassword: str
+
+class UserRegistrationRequest(BaseModel):
+    firstName: str
+    lastName: str
+    email: str
+    password: str
+    confirmPassword: str
+
+class UserLoginRequest(BaseModel):
+    email: str
+    password: str
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+
+class ApiKeyRequest(BaseModel):
+    api_key: str

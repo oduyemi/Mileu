@@ -14,16 +14,15 @@ Base = declarative_base()
 
 
 
-class User(Base):
-    __tablename__ = "user"
+class Users(Base):
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    fname = Column(String(250), index=True)
-    lname = Column(String(250), index=True)
-    email = Column(String(150), index=True)
-    pwd = Column(String(120), index=True)
-    hashed_pwd = Column(String(120), index=True)
+    firstName = Column(String(250), index=True)
+    lastName = Column(String(250), index=True)
+    email = Column(String(150), index=True, unique=True)
+    hashedPassword = Column(String(255), index=True)
+    api_key = Column(String(255), index=True)
 
-    api_keys = relationship("APIKey", back_populates="user")
 
 class Region(Base):
     __tablename__ = "region"
@@ -37,6 +36,7 @@ class State(Base):
     __tablename__ = "state"
     state_id = Column(Integer, primary_key=True, index=True)
     state_name = Column(String(250), index=True, nullable=False)
+    state_capital = Column(String(250), index=True, nullable=False)
     state_region_id = Column(Integer, ForeignKey("region.region_id"), nullable=False)
 
     region = relationship("Region", back_populates="states")  
@@ -52,11 +52,3 @@ class LGA(Base):
     state = relationship("State", back_populates="lgas") 
 
 
-
-class APIKey(Base):
-    __tablename__ = "api_key"
-    id = Column(Integer, primary_key=True, index=True)
-    key = Column(String(255), index=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-
-    user = relationship("User", back_populates="api_keys")

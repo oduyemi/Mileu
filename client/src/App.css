@@ -1,38 +1,67 @@
-.App {
-  text-align: center;
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body{
+  background-color: #023047;
+  overflow-y: hidden !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.App{
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: auto; 
+  color: #fff;
 }
 
-.App-link {
-  color: #61dafb;
+#root{
+  height: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+
+
+.btnUp{
+  margin-top: -1%;
 }
+
+.up{
+  margin-top: -2% !important;
+}
+
+
+html {
+  overflow-x: hidden;
+  font-size: 1em; }
+
+footer{
+  width: 100%;
+  position: fixed;
+  bottom: 0 !important;
+}
+  
+
+input, textarea, p {
+  font-weight: 300; }
+
+::-moz-selection {
+  background: #000;
+  color: #fff; }
+
+::selection {
+  background: #000;
+  color: #fff; }
+
+::-moz-selection {
+  background: #000;
+  color: #fff; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300 !important; }
+
+a {
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease; }
+
