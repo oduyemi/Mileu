@@ -108,6 +108,22 @@ async def edit_user_details(id: int, user_data: schemas.UserUpdate, db: Session 
 
 
 @app.post("/api-key/{apiKey}")
+async def api_key(apiKey: str = Path(...), db: Session = Depends(get_db)):
+    try:
+        print(f"Received API key: {apiKey}")
+        user = db.query(Users).filter(Users.api_key == apiKey).first()
+  
+        if not user:
+            raise HTTPException(status_code=404, detail="Incorrect API key. Sign up to generate API key")
+
+        return {"api_key": user.api_key}
+
+    except Exception as e:
+        print(f"Error: {e}")
+        raise
+
+
+@app.get("/api-key/{apiKey}")
 async def get_api_key(apiKey: str = Path(...), db: Session = Depends(get_db)):
     try:
         print(f"Received API key: {apiKey}")
