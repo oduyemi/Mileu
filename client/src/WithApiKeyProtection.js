@@ -4,12 +4,13 @@ import axios from "axios";
 const withApiKeyProtection = (WrappedComponent) => {
   const WithApiKeyProtection = ({ apiKey }) => {
     const [apiKeyExists, setApiKeyExists] = useState(false);
+    const [flashMessage, setFlashMessage] = useState(null)
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       const checkApiKey = async () => {
         try {
-          const response = await axios.post(
+          const response = await axios.get(
             `http://localhost:8000/api-key/${apiKey}`,
             {},
             {
@@ -19,10 +20,13 @@ const withApiKeyProtection = (WrappedComponent) => {
 
           if (response.status === 200) {
             setApiKeyExists(true);
+            setFlashMessage({
+              type: "success",
+              message: "API key Authentication successful",
+          });
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            // Handle error if needed
           } else {
             console.error("Error checking API key:", error);
           }

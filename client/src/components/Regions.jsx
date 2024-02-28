@@ -33,7 +33,9 @@ export const Regions = () => {
     }, [apiKey]);
 
     const handleApiKeyValidated = () => {
+        if (apiKey){
         setApiKeyValidated(true); 
+        }
     };
 
     useEffect(() => {

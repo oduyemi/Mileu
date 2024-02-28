@@ -62,7 +62,7 @@ export const States = () => {
             
             <div className="row d-flex mx-auto">
                 <div className="col ms-5">
-                    <h2 className="fw-bold mx-auto my-3">State</h2>
+                    <h2 className="fw-bold mx-auto mt-3 mb-5 text-center">States &amp; Capitals</h2>
                     {states.map((state) => (
                         <div className="row" key={state.id}>
                             <div className="col">
