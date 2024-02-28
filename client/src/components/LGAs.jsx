@@ -8,13 +8,14 @@ import withApiKeyProtection from "../WithApiKeyProtection";
 export const LGAs = () => {
     const [lgas, setLgas] = useState([]);
     const { apiKey } = useContext(UserContext);
+    const [apiKeyValidated, setApiKeyValidated] = useState(false);
 
     useEffect(() => {
         const validateApiKey = async () => {
             try {
 
                 await axios.post(`http://localhost:8000/api-key/${apiKey}`, {});
-
+                handleApiKeyValidated();
             } catch (error) {
 
                 if (error.response && error.response.status === 404) {
@@ -32,18 +33,29 @@ export const LGAs = () => {
         validateApiKey();
     }, [apiKey]);
 
+
+    const handleApiKeyValidated = () => {
+        if (apiKey){
+        setApiKeyValidated(true); 
+        }
+    };
+
     useEffect(() => {
         const fetchLgas = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/lgas");
+                const response = await axios.get("http://localhost:8000/lgas", {
+                    headers: { "Authorization": `Bearer ${apiKey}` }
+                });
                 setLgas(response.data);
             } catch (error) {
                 console.error("Error fetching states:", error);
             }
         };
 
-        fetchLgas();
-    }, []);
+        if (apiKeyValidated) { 
+            fetchLgas();
+        }
+    }, [apiKeyValidated, apiKey]);
     return(
         <div>
             <div className="container">

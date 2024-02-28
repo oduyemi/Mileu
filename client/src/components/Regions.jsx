@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 import withApiKeyProtection from "../WithApiKeyProtection";
-import { ApiKeyForm } from "./ApiKeyForm";
+
 
 export const Regions = () => {
     const [regions, setRegions] = useState([]);
@@ -72,7 +72,6 @@ export const Regions = () => {
     
     return (
         <>
-            {/* <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} /> */}
             <div className="container mb-5">
                 <div className="section-title row text-center">
                     <div className="text-center">
