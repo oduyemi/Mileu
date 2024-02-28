@@ -3,30 +3,10 @@ import axios from 'axios';
 
 export const UserContext = createContext();
 
-// const initialState = {
-//   isApiKeyValidated: false,
-//   user: null
-// }
-
-// function reducer (state, action) {
-//   switch(action.type){
-//     case "signin":
-//     return {
-//       ...state, user:action.payload.user
-//     }
-//     case "isValidated":
-//       return {
-//         ...state, isApiKeyValidated:action.payload.isValidated
-//       }
-//       default:
-//         console.log("Default state")
-//   }
-// }
-
-
 export const UserProvider = ({ children }) => {
   const [apiKey, setApiKey] = useState(null);
   const [flashMessage, setFlashMessage] = useState(null);
+  const [apiKeyValidated, setApiKeyValidated] = useState(false);
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -52,15 +32,38 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const handleApiKeyValidated = (apiKey) => {
-    setApiKey(apiKey);
+  const handleApiKeyValidated = (requestedPath) => {
+    if (apiKey) {
+      localStorage.setItem("requestedPath", requestedPath); 
+      setApiKeyValidated(true);
+    }
   };
 
   useEffect(() => {
+    const validateApiKey = async () => {
+        try {
+            await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
+            const requestedPath = localStorage.getItem("requestedPath");
+            if (requestedPath) {
+                window.location.href = requestedPath;
+            }
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setFlashMessage("Incorrect API key. Sign up to generate API key");
+            setTimeout(() => {
+              setFlashMessage(null);
+              window.location.href = "/signup";
+            }, 2000);
+            } else {
+                console.error("Error validating API key:", error);
+            }
+        }
+    };
+
     if (apiKey) {
-      validateApiKey(apiKey);
+      validateApiKey();
     }
-  }, [apiKey]); 
+}, [apiKey]);
 
     // LOGIN VALIDATION
   const handleLogin = async (email, password) => {
@@ -100,7 +103,7 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // LOGOUT function
+  // LOGOUT 
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");

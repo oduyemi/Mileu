@@ -58,7 +58,7 @@ export const LGAs = () => {
     }, [apiKeyValidated, apiKey]);
     return(
         <div>
-            <ApiKeyForm apiKeyValidated={handleApiKeyValidated} />
+            <ApiKeyForm apiKeyValidated={() => handleApiKeyValidated("/lgas")} />
             <div className="container">
                 <div className="section-title row text-center">
                     <div className="text-center">

@@ -8,33 +8,41 @@ export const Regions = () => {
     const [regions, setRegions] = useState([]);
     const { apiKey } = useContext(UserContext);
     const [apiKeyValidated, setApiKeyValidated] = useState(false);
+    const [requestedPath, setRequestedPath] = useState("/regions"); // Default value for the requested path
+
+    useEffect(() => {
+        localStorage.setItem("requestedPath", "/regions");
+    }, []);
+
+    useEffect(() => {
+        const requestedPathFromLocalStorage = localStorage.getItem("requestedPath");
+        if (requestedPathFromLocalStorage) {
+            setRequestedPath(requestedPathFromLocalStorage);
+        }
+    }, []);
 
     useEffect(() => {
         const validateApiKey = async () => {
             try {
-
                 await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
                 handleApiKeyValidated();
             } catch (error) {
-
                 if (error.response && error.response.status === 404) {
-                   
                     window.location.href = "/api";
-
                 } else {
-
                     console.error("Error validating API key:", error);
-
                 }
             }
         }; 
-
+    
         validateApiKey();
     }, [apiKey]);
+    
 
     const handleApiKeyValidated = () => {
         if (apiKey){
-        setApiKeyValidated(true); 
+            setApiKeyValidated(true);
+            window.location.href = requestedPath; 
         }
     };
 
@@ -69,10 +77,10 @@ export const Regions = () => {
           fetchRegions();
         }
     }, [apiKey]);
-    
+
     return (
         <>
-            <ApiKeyForm apiKeyValidated={handleApiKeyValidated} />
+            <ApiKeyForm apiKeyValidated={() => handleApiKeyValidated("/regions")} />
             <div className="container mb-5">
                 <div className="section-title row text-center">
                     <div className="text-center">
