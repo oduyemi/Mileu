@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 import withApiKeyProtection from "../WithApiKeyProtection";
+import { ApiKeyForm } from "./ApiKeyForm";
 
 export const States = () => {
     const [states, setStates] = useState([]);
@@ -57,6 +58,7 @@ export const States = () => {
 
     return (
         <div className="container">
+            <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} />
             <div className="section-title row text-center">
                 <div className="text-center">
                     <h1 className="text-4l text-center fw-light mt-5 d-inline">

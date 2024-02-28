@@ -4,7 +4,6 @@ import axios from "axios";
 const withApiKeyProtection = (WrappedComponent) => {
   const WithApiKeyProtection = ({ apiKey }) => {
     const [apiKeyExists, setApiKeyExists] = useState(false);
-    const [flashMessage, setFlashMessage] = useState(null)
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,10 +19,6 @@ const withApiKeyProtection = (WrappedComponent) => {
 
           if (response.status === 200) {
             setApiKeyExists(true);
-            setFlashMessage({
-              type: "success",
-              message: "API key Authentication successful",
-          });
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {

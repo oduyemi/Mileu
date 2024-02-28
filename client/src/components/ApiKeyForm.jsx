@@ -29,7 +29,7 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
                     type: "error",
                     message: responseData.detail || "An error occurred during API key validation",
                 });
-                setApiKey({});
+                setApiKey({}); 
                 setFormSubmitted(true);
             }
         } catch (error) {

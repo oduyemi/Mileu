@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 import withApiKeyProtection from "../WithApiKeyProtection";
-
+import { ApiKeyForm } from "./ApiKeyForm";
 
 
 export const LGAs = () => {
@@ -58,6 +58,7 @@ export const LGAs = () => {
     }, [apiKeyValidated, apiKey]);
     return(
         <div>
+            <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} />
             <div className="container">
                 <div className="section-title row text-center">
                     <div className="text-center">
