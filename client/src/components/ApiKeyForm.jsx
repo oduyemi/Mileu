@@ -20,7 +20,7 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
                 onApiKeyValidated(responseData.api_key);
                 setFlashMessage({
                     type: "success",
-                    message: "API Key validated successfully" ,
+                    message: "API Key validated successfully",
                 });
                 setFormSubmitted(true);
             } else {

@@ -10,7 +10,7 @@ const withApiKeyProtection = (WrappedComponent) => {
     useEffect(() => {
       const checkApiKey = async () => {
         try {
-          const response = await axios.get(
+          const response = await axios.post(
             `https://mileu.onrender.com/api-key/${apiKey}`,
             {},
             {
