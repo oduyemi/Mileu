@@ -11,7 +11,7 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
 
     const handleApi = async () => {
         try {
-            const response = await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`);
+            const response = await axios.get(`https://mileu.onrender.com/api-key/${apiKey}`);
             const responseData = response.data;
     
             if (response.status === 200) {
