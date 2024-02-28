@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
   // API VALIDATION
   const validateApiKey = async (apiKey) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api-key/${apiKey}`, {});
+      const response = await axios.get(`https://mileu.onrender.com/api-key/${apiKey}`, {});
       console.log(response.data);
   
       setApiKey(response.data.api_key); 
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }) => {
     // LOGIN VALIDATION
   const handleLogin = async (email, password) => {
     try {
-      const response = await axios.post("http://localhost:8000/sign-in", { email, password });
+      const response = await axios.post("https://mileu.onrender.com/sign-in", { email, password });
 
       if (response.status === 200) {
         console.log("Success:", response.data);

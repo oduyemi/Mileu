@@ -11,7 +11,7 @@ const withApiKeyProtection = (WrappedComponent) => {
       const checkApiKey = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:8000/api-key/${apiKey}`,
+            `https://mileu.onrender.com/api-key/${apiKey}`,
             {},
             {
               headers: { "Content-Type": "application/json" }
