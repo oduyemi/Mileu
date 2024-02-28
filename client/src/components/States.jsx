@@ -12,7 +12,7 @@ export const States = () => {
         const validateApiKey = async () => {
             try {
 
-                await axios.post(`http://localhost:8000/api-key/${apiKey}`, {});
+                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
                 handleApiKeyValidated();
 
             } catch (error) {
@@ -42,7 +42,7 @@ export const States = () => {
     useEffect(() => {
         const fetchStates = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/states", {
+                const response = await axios.get("https://mileu.onrender.com/states", {
                     headers: { "Authorization": `Bearer ${apiKey}` }
                 });
                 setStates(response.data);

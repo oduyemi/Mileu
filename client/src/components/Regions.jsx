@@ -13,7 +13,7 @@ export const Regions = () => {
         const validateApiKey = async () => {
             try {
 
-                await axios.post(`http://localhost:8000/api-key/${apiKey}`, {});
+                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
                 handleApiKeyValidated();
             } catch (error) {
 
@@ -41,7 +41,7 @@ export const Regions = () => {
     useEffect(() => {
         const fetchRegions = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/regions", {
+                const response = await axios.get("https://mileu.onrender.com/regions", {
                     headers: { "Authorization": `Bearer ${apiKey}` }
                 });
                 setRegions(response.data);
@@ -57,7 +57,7 @@ export const Regions = () => {
     useEffect(() => {
         const fetchRegions = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/regions", {
+                const response = await axios.get("https://mileu.onrender.com/regions", {
                     headers: { "Authorization": `Bearer ${apiKey}` }
                 });
                 setRegions(response.data);

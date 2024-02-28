@@ -14,7 +14,7 @@ export const LGAs = () => {
         const validateApiKey = async () => {
             try {
 
-                await axios.post(`http://localhost:8000/api-key/${apiKey}`, {});
+                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
                 handleApiKeyValidated();
             } catch (error) {
 
@@ -43,7 +43,7 @@ export const LGAs = () => {
     useEffect(() => {
         const fetchLgas = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/lgas", {
+                const response = await axios.get("https://mileu.onrender.com/lgas", {
                     headers: { "Authorization": `Bearer ${apiKey}` }
                 });
                 setLgas(response.data);

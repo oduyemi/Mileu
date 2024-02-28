@@ -26,7 +26,7 @@ export const SignUpForm = () => {
                 throw new Error("Passwords do not match");
             }
     
-            const response = await axios.post("http://localhost:8000/sign-up", formData, {
+            const response = await axios.post("https://mileu.onrender.com/sign-up", formData, {
                 headers: { "Content-Type": "application/json" }
             });
     

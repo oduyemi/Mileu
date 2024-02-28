@@ -25,7 +25,7 @@ export const MyAccount = () => {
 
     const updateUserData = async () => {
         try {
-            const response = await axios.put(`http://localhost:8000/users/${user.id}`, {
+            const response = await axios.put(`https://mileu.onrender.com/users/${user.id}`, {
                 first_name: userDetails.firstName,
                 last_name: userDetails.lastName,
                 email: userDetails.email
