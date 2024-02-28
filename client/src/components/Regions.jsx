@@ -2,17 +2,19 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 import withApiKeyProtection from "../WithApiKeyProtection";
+import { ApiKeyForm } from "./ApiKeyForm";
 
 export const Regions = () => {
     const [regions, setRegions] = useState([]);
     const { apiKey } = useContext(UserContext);
+    const [apiKeyValidated, setApiKeyValidated] = useState(false);
 
     useEffect(() => {
         const validateApiKey = async () => {
             try {
 
                 await axios.post(`http://localhost:8000/api-key/${apiKey}`, {});
-
+                handleApiKeyValidated();
             } catch (error) {
 
                 if (error.response && error.response.status === 404) {
@@ -30,6 +32,26 @@ export const Regions = () => {
         validateApiKey();
     }, [apiKey]);
 
+    const handleApiKeyValidated = () => {
+        setApiKeyValidated(true); 
+    };
+
+    useEffect(() => {
+        const fetchRegions = async () => {
+            try {
+                const response = await axios.get("http://localhost:8000/regions", {
+                    headers: { "Authorization": `Bearer ${apiKey}` }
+                });
+                setRegions(response.data);
+            } catch (error) {
+                console.error("Error fetching regions:", error);
+            }
+        };
+        if (apiKeyValidated) { 
+            fetchRegions();
+        }
+    }, [apiKeyValidated, apiKey]);
+
     useEffect(() => {
         const fetchRegions = async () => {
             try {
@@ -46,23 +68,23 @@ export const Regions = () => {
         }
     }, [apiKey]);
     
-    return(
-        <div>
+    return (
+        <>
+            {/* <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} /> */}
             <div className="container mb-5">
                 <div className="section-title row text-center">
                     <div className="text-center">
-                    <h1 className="text-4l text-center fw-light mt-5 d-inline">
-                        Geo-Political &nbsp;
-                        <span>
-                            <h1 className="animate__animated animate__flash animated__delay__2 text-warning d-inline">
-                                Regions
-                            </h1>
-                        </span> 
-                        &nbsp; in Nigeria
-                    </h1>
+                        <h1 className="text-4l text-center fw-light mt-5 d-inline">
+                            Geo-Political &nbsp;
+                            <span>
+                                <h1 className="animate__animated animate__flash animated__delay__2 text-warning d-inline">
+                                    Regions
+                                </h1>
+                            </span> 
+                            &nbsp; in Nigeria
+                        </h1>
                     </div>
                 </div>
-
                 <hr /> 
                 <div className="row mb-5 mx-auto">
                     <div className="d-flex align-items-center justify-content-center" style={{ margin: "10px", padding: "10px" }}>
@@ -78,11 +100,9 @@ export const Regions = () => {
                         </div>
                     </div>
                 </div>
-                
             </div>
-        </div>
-    )
+        </>
+    );
 }
-
 
 export default withApiKeyProtection(Regions);

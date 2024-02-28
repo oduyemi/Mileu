@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const withApiKeyProtection = (WrappedComponent, apiKey) => {
-  const WithApiKeyProtection = () => {
+const withApiKeyProtection = (WrappedComponent) => {
+  const WithApiKeyProtection = ({ apiKey }) => {
     const [apiKeyExists, setApiKeyExists] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -22,10 +22,9 @@ const withApiKeyProtection = (WrappedComponent, apiKey) => {
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            window.location.href = "/api";
+            // Handle error if needed
           } else {
             console.error("Error checking API key:", error);
-            window.location.href = "/signup";
           }
         } finally {
           setLoading(false);

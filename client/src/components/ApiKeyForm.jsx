@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 
-export const ApiKeyForm = () => {
+export const ApiKeyForm = ({ onApiKeyValidated }) => {
     const [apiKey, setApiKey] = useState("");
     const [flashMessage, setFlashMessage] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -16,16 +16,13 @@ export const ApiKeyForm = () => {
     
             if (response.status === 200) {
                 console.log("Success:", responseData);
-                setApiKey(responseData.api_key);
                 ApiContext.setApiKey(responseData.api_key); 
+                onApiKeyValidated(responseData.api_key);
                 setFlashMessage({
                     type: "success",
                     message: "API Key validated successfully" ,
                 });
                 setFormSubmitted(true);
-                setTimeout(() => {
-                    window.location.href = "/regions";
-                }, 5000);
             } else {
                 console.error("Error:", responseData);
                 setFlashMessage({
