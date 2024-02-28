@@ -8,7 +8,6 @@ import LGA from "../pages/LGA";
 import Profile from "../pages/Profile";
 import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
-import SignOut from "../pages/SignOut";
 import API from "../pages/API";
 
 
@@ -17,8 +16,8 @@ import API from "../pages/API";
 const Navigation = () => {
     return(
         <>
-            <Header />
-                <UserProvider>
+            <UserProvider>
+                <Header />
                     <Routes>
                         <Route exact path="/signin" element={<SignIn />} />
                         <Route path="/" element={<Home />} />
@@ -27,10 +26,9 @@ const Navigation = () => {
                         <Route path="/lgas" element={<LGA />} />
                         <Route path="/user-account" element={<Profile/>} />
                         <Route path="/api" element={<API />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="/signout" element={<SignOut />} />                    
+                        <Route path="/signup" element={<SignUp />} />                   
                     </Routes>
-                </UserProvider>
+            </UserProvider>
         </>
     )
 }

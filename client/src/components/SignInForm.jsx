@@ -17,18 +17,18 @@ export const SignInForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setFormSubmitted(true); // Set formSubmitted to true when submitted
+        setFormSubmitted(true); 
         handleLogin(formData.email, formData.password)
     };
 
-    console.log("flashMessage:", flashMessage); // Check the value of flashMessage
+    console.log("flashMessage:", flashMessage); 
 
     return (
         <div className="container d-flex justify-content-center align-items-center">
             <div className="card p-4 rounded-md shadow-lg">
                 <h1 className="text-center text-dark text-uppercase mb-4">Sign in</h1>
                 <form onSubmit={handleSubmit}>
-                    {formSubmitted && flashMessage && ( // Check if formSubmitted is true and flashMessage exists
+                    {formSubmitted && flashMessage && (
                         <div className={`alert ${flashMessage.type === "success" ? "alert-success" : "alert-danger"}`}>
                             {flashMessage.message}
                         </div>

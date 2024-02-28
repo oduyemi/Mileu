@@ -2,8 +2,6 @@ import { Footer } from "../../components/Footer";
 import { SignInForm } from "../../components/SignInForm";
 
 
-
-
 const SignIn = () =>{
     return(
         <>

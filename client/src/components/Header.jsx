@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../assets/images/logo/logo.png";
 import { Link } from "react-router-dom";
-
+import { UserContext } from "../UserContext";
+import { SignOut } from "./SignOut";
 
 export const Header = () => {
+    const { user } = useContext(UserContext);
+
     return(
         <header>
             <nav className="navbar navbar-expand-lg navbar-dark" id="probootstrap-navbar">
@@ -24,15 +27,23 @@ export const Header = () => {
                         </ul>
                     </div>
                     <div className="d-none d-md-flex ml-auto">
-                        <Link className="nav-link" to="/signin">
-                            <button className="btn btn-lg btn-outline-warning btnUp">Sign In</button>
-                        </Link> &emsp;
-                        <Link className="nav-link" to="/signup">
-                            <button className="btn btn-lg btn-warning btnUp">Sign Up</button>
-                        </Link>
+                        {user ? (
+                            <div className="cta">
+                                <SignOut /> 
+                            </div>
+                        ) : (
+                            <>
+                                <Link className="nav-link" to="/signin">
+                                    <button className="btn btn-lg btn-outline-warning btnUp">Sign In</button>
+                                </Link> &emsp;
+                                <Link className="nav-link" to="/signup">
+                                    <button className="btn btn-lg btn-warning btnUp">Sign Up</button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
         </header>
-    )
-}
+    );
+};
