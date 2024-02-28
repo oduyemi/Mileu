@@ -72,7 +72,7 @@ export const Regions = () => {
     
     return (
         <>
-            <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} />
+            <ApiKeyForm apiKeyValidated={handleApiKeyValidated} />
             <div className="container mb-5">
                 <div className="section-title row text-center">
                     <div className="text-center">

@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 
-export const ApiKeyForm = ({ onApiKeyValidated }) => {
+export const ApiKeyForm = () => {
     const [apiKey, setApiKey] = useState("");
     const [flashMessage, setFlashMessage] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const ApiContext = useContext(UserContext);
+    const { handleApiKeyValidated } = useContext(UserContext);
 
     const handleApi = async () => {
         try {
@@ -16,8 +16,7 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
     
             if (response.status === 200) {
                 console.log("Success:", responseData);
-                ApiContext.setApiKey(responseData.api_key); 
-                onApiKeyValidated(responseData.api_key);
+                handleApiKeyValidated(responseData.api_key);
                 setFlashMessage({
                     type: "success",
                     message: "API Key validated successfully",
@@ -29,24 +28,15 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
                     type: "error",
                     message: responseData.detail || "An error occurred during API key validation",
                 });
-                setApiKey({}); 
+                setApiKey("");
                 setFormSubmitted(true);
             }
         } catch (error) {
-            if (error.response) {
-                console.error("Axios Error Message:", error.message);
-                console.log("Response Data:", error.response.data);
-                setFlashMessage({
-                    type: "error",
-                    message: error.response.data.detail || "An error occurred during API key validation",
-                });
-            } else {
-                console.error("Other Error:", error.message);
-                setFlashMessage({
-                    type: "error",
-                    message: "An unexpected error occurred. Please try again later.",
-                });
-            }
+            console.error("Error:", error);
+            setFlashMessage({
+                type: "error",
+                message: "An unexpected error occurred. Please try again later.",
+            });
             setFormSubmitted(true);
         }
     };
@@ -54,7 +44,6 @@ export const ApiKeyForm = ({ onApiKeyValidated }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         await handleApi();
-        setFormSubmitted(true);
     };
 
     return (

@@ -58,7 +58,7 @@ export const States = () => {
 
     return (
         <div className="container">
-            <ApiKeyForm onApiKeyValidated={handleApiKeyValidated} />
+            <ApiKeyForm apiKeyValidated={handleApiKeyValidated} />
             <div className="section-title row text-center">
                 <div className="text-center">
                     <h1 className="text-4l text-center fw-light mt-5 d-inline">

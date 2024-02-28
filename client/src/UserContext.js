@@ -3,25 +3,25 @@ import axios from 'axios';
 
 export const UserContext = createContext();
 
-const initialState = {
-  isApiKeyValidated: false,
-  user: null
-}
+// const initialState = {
+//   isApiKeyValidated: false,
+//   user: null
+// }
 
-function reducer (state, action) {
-  switch(action.type){
-    case "signin":
-    return {
-      ...state, user:action.payload.user
-    }
-    case "isValidated":
-      return {
-        ...state, isApiKeyValidated:action.payload.isValidated
-      }
-      default:
-        console.log("Default state")
-  }
-}
+// function reducer (state, action) {
+//   switch(action.type){
+//     case "signin":
+//     return {
+//       ...state, user:action.payload.user
+//     }
+//     case "isValidated":
+//       return {
+//         ...state, isApiKeyValidated:action.payload.isValidated
+//       }
+//       default:
+//         console.log("Default state")
+//   }
+// }
 
 
 export const UserProvider = ({ children }) => {
@@ -50,6 +50,10 @@ export const UserProvider = ({ children }) => {
         console.error("Error validating API key:", error);
       }
     }
+  };
+
+  const handleApiKeyValidated = (apiKey) => {
+    setApiKey(apiKey);
   };
 
   useEffect(() => {
@@ -92,9 +96,6 @@ export const UserProvider = ({ children }) => {
       } else if (error.request) {
         console.error("Request Error:", error.request);
         setFlashMessage({ type: "error", message: "No response received from the server. Please try again later." });
-      } else {
-        console.error("Other Error:", error.message);
-        setFlashMessage({ type: "error", message: "An unexpected error occurred. Please try again later." });
       }
     }
   };
@@ -108,7 +109,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, apiKey, setApiKey, flashMessage, handleLogin, handleLogout }}>
+    <UserContext.Provider value={{ user, setUser, apiKey, setApiKey, flashMessage, handleLogin, handleLogout, handleApiKeyValidated }}>
       {children}
     </UserContext.Provider>
   );
