@@ -32,10 +32,10 @@ export const States = () => {
                     localStorage.removeItem("requestedPath");
                 };
     
-                const clearApiKeyInterval = setInterval(clearStoredApiKey, 5 * 60 * 1000); 
+                const clearApiKeyInterval = setInterval(clearStoredApiKey, 2 * 60 * 1000); 
              
                 return () => clearInterval(clearApiKeyInterval);
-                
+
             } catch (error) {
                 console.error("Error fetching states:", error);
                 setFlashMessage({
