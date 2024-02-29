@@ -14,12 +14,13 @@ export const ApiKeyForm = () => {
         try {
             const response = await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`);
             if (response.status === 200) {
-                localStorage.setItem("apiKey", apiKey, "requestedPath", "/regions");
+                localStorage.setItem("apiKey", apiKey);
                 setFlashMessage({
                     type: "success",
                     message: "API Key validated successfully",
                 });
-                window.location.href = "/regions";
+                let requestedPath = localStorage.getItem("requestedPath");
+                window.location.href = requestedPath;
             } else {
                 console.error("Error validating API key:", response.data);
                 setFlashMessage({

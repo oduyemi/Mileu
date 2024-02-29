@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export const Banner = () => {
     return(
         <>
-            <div className="mx-auto my-auto">
+            <div className="mx-auto my-auto mb-5">
                 <h1 className="text-4l text-center fw-light mt-5">
                     Nigeria's Location &nbsp;
                     <span>

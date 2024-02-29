@@ -4,28 +4,38 @@ import axios from "axios";
 
 
 export const Regions = () => {
-    const [apiKey, setApiKey] = useState("");
     const [regions, setRegions] = useState([]);
     const [flashMessage, setFlashMessage] = useState(null);
     
     useEffect(() => {
         const fetchRegions = async () => {
             try {
+                let requestedPath = "/regions";
                 const storedApiKey = localStorage.getItem("apiKey");
                 if (!storedApiKey) {
                     setFlashMessage({
                         type: "error",
                         message: "API key is required for access.",
                     });
-                    setTimeout(() => setFlashMessage(null), 1000);
-                    window.location.href = "/api";
-                    return;
-                }
-                setApiKey(storedApiKey);
+
+                    localStorage.setItem("requestedPath", requestedPath)
+                    window.location.href = "/api"
+                } else {
                 const response = await axios.get("https://mileu.onrender.com/regions", {
                     headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
-                setRegions(response.data);
+                    setRegions(response.data);
+                }
+
+                const clearStoredApiKey = () => {
+                    localStorage.removeItem("apiKey");
+                    localStorage.removeItem("requestedPath");
+                };
+    
+                const clearApiKeyInterval = setInterval(clearStoredApiKey, 5 * 60 * 1000); 
+             
+                return () => clearInterval(clearApiKeyInterval);
+                
             } catch (error) {
                 console.error("Error fetching regions:", error);
                 setFlashMessage({
@@ -37,6 +47,7 @@ export const Regions = () => {
 
         fetchRegions();
     }, []); 
+
     return (
         <>
             <div className="container mb-5">

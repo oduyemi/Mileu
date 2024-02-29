@@ -1,33 +1,52 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../UserContext";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 
 
 export const States = () => {
     const [states, setStates] = useState([]);
-    const { apiKey } = useContext(UserContext);
+    const [flashMessage, setFlashMessage] = useState(null)
 
     useEffect(() => {
         const fetchStates = async () => {
             try {
+                let requestedPath = "/states";
                 const storedApiKey = localStorage.getItem("apiKey");
                 if (!storedApiKey) {
-                    window.location.href = "/api";
-                    return;
-                }
+                    setFlashMessage({
+                        type: "error",
+                        message: "API key is required for access.",
+                    });
 
+                    localStorage.setItem("requestedPath", requestedPath)
+                    window.location.href = "/api"
+                } else {
                 const response = await axios.get("https://mileu.onrender.com/states", {
                     headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
-                setStates(response.data);
+                    setStates(response.data);
+                }
+
+                const clearStoredApiKey = () => {
+                    localStorage.removeItem("apiKey");
+                    localStorage.removeItem("requestedPath");
+                };
+    
+                const clearApiKeyInterval = setInterval(clearStoredApiKey, 5 * 60 * 1000); 
+             
+                return () => clearInterval(clearApiKeyInterval);
+                
             } catch (error) {
-                console.error("Error fetching regions:", error);
+                console.error("Error fetching states:", error);
+                setFlashMessage({
+                    type: "error",
+                    message: "Failed to fetch states. Please try again later.",
+                });
             }
         };
 
         fetchStates();
-    }, []);
+    }, []); 
 
     return (
         <div className="container">
@@ -47,6 +66,11 @@ export const States = () => {
             <hr />
             
             <div className="row d-flex mx-auto">
+                {flashMessage && (
+                    <div className={`alert ${flashMessage.type === "success" ? "alert-success" : "alert-danger"}`}>
+                        {flashMessage.message}
+                    </div>
+                )}
                 <div className="col ms-5">
                     <h2 className="fw-bold mx-auto mt-3 mb-5 text-center">States &amp; Capitals</h2>
                     {states.map((state) => (
@@ -65,5 +89,3 @@ export const States = () => {
     );
 };
 
-
-// export default withApiKeyProtection(States)

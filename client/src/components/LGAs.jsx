@@ -6,23 +6,43 @@ import { ApiKeyForm } from "./ApiKeyForm";
 
 export const LGAs = () => {
     const [lgas, setLgas] = useState([]);
-    const { apiKey } = useContext(UserContext);
+    const [flashMessage, setFlashMessage] = useState(null);
 
     useEffect(() => {
         const fetchLgas = async () => {
             try {
+                let requestedPath = "/lgas";
                 const storedApiKey = localStorage.getItem("apiKey");
                 if (!storedApiKey) {
-                    window.location.href = "/api";
-                    return;
-                }
+                    setFlashMessage({
+                        type: "error",
+                        message: "API key is required for access.",
+                    });
 
+                    localStorage.setItem("requestedPath", requestedPath)
+                    window.location.href = "/api"
+                } else {
                 const response = await axios.get("https://mileu.onrender.com/lgas", {
                     headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
-                setLgas(response.data);
+                    setLgas(response.data);
+                }
+
+                const clearStoredApiKey = () => {
+                    localStorage.removeItem("apiKey");
+                    localStorage.removeItem("requestedPath");
+                };
+    
+                const clearApiKeyInterval = setInterval(clearStoredApiKey, 5 * 60 * 1000); 
+             
+                return () => clearInterval(clearApiKeyInterval);
+                
             } catch (error) {
                 console.error("Error fetching LGAs:", error);
+                setFlashMessage({
+                    type: "error",
+                    message: "Failed to fetch LGAs. Please try again later.",
+                });
             }
         };
 
@@ -50,6 +70,11 @@ export const LGAs = () => {
             </div>
 
             <div className="row d-flex align-items-center justify-content-center mb-5">
+                {flashMessage && (
+                    <div className={`alert ${flashMessage.type === "success" ? "alert-success" : "alert-danger"}`}>
+                        {flashMessage.message}
+                    </div>
+                )}
                 <div className="col mx-auto ms-5">
                     <h2 className="fw-bold mx-auto my-3">LGA</h2>
                     {lgas.map(lga => (
