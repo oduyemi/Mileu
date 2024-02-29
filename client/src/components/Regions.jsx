@@ -1,86 +1,44 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { UserContext } from "../UserContext";
-import withApiKeyProtection from "../WithApiKeyProtection";
-import { ApiKeyForm } from "./ApiKeyForm";
+
+
 
 export const Regions = () => {
+    const [apiKey, setApiKey] = useState("");
     const [regions, setRegions] = useState([]);
-    const { apiKey } = useContext(UserContext);
-    const [apiKeyValidated, setApiKeyValidated] = useState(false);
-    const [requestedPath, setRequestedPath] = useState("/regions"); // Default value for the requested path
-
+    const [flashMessage, setFlashMessage] = useState(null);
+    
     useEffect(() => {
-        localStorage.setItem("requestedPath", "/regions");
-    }, []);
-
-    useEffect(() => {
-        const requestedPathFromLocalStorage = localStorage.getItem("requestedPath");
-        if (requestedPathFromLocalStorage) {
-            setRequestedPath(requestedPathFromLocalStorage);
-        }
-    }, []);
-
-    useEffect(() => {
-        const validateApiKey = async () => {
+        const fetchRegions = async () => {
             try {
-                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
-                handleApiKeyValidated();
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
+                const storedApiKey = localStorage.getItem("apiKey");
+                if (!storedApiKey) {
+                    setFlashMessage({
+                        type: "error",
+                        message: "API key is required for access.",
+                    });
+                    setTimeout(() => setFlashMessage(null), 1000);
                     window.location.href = "/api";
-                } else {
-                    console.error("Error validating API key:", error);
+                    return;
                 }
-            }
-        }; 
-    
-        validateApiKey();
-    }, [apiKey]);
-    
-
-    const handleApiKeyValidated = () => {
-        if (apiKey){
-            setApiKeyValidated(true);
-            window.location.href = requestedPath; 
-        }
-    };
-
-    useEffect(() => {
-        const fetchRegions = async () => {
-            try {
+                setApiKey(storedApiKey);
                 const response = await axios.get("https://mileu.onrender.com/regions", {
-                    headers: { "Authorization": `Bearer ${apiKey}` }
+                    headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
                 setRegions(response.data);
             } catch (error) {
                 console.error("Error fetching regions:", error);
-            }
-        };
-        if (apiKeyValidated) { 
-            fetchRegions();
-        }
-    }, [apiKeyValidated, apiKey]);
-
-    useEffect(() => {
-        const fetchRegions = async () => {
-            try {
-                const response = await axios.get("https://mileu.onrender.com/regions", {
-                    headers: { "Authorization": `Bearer ${apiKey}` }
+                setFlashMessage({
+                    type: "error",
+                    message: "Failed to fetch regions. Please try again later.",
                 });
-                setRegions(response.data);
-            } catch (error) {
-                console.error("Error fetching regions:", error);
             }
         };
-        if (apiKey) {
-          fetchRegions();
-        }
-    }, [apiKey]);
 
+        fetchRegions();
+    }, []); 
     return (
         <>
-            <ApiKeyForm apiKeyValidated={() => handleApiKeyValidated("/regions")} />
             <div className="container mb-5">
                 <div className="section-title row text-center">
                     <div className="text-center">
@@ -97,6 +55,11 @@ export const Regions = () => {
                 </div>
                 <hr /> 
                 <div className="row mb-5 mx-auto">
+                    {flashMessage && (
+                        <div className={`alert ${flashMessage.type === "success" ? "alert-success" : "alert-danger"}`}>
+                            {flashMessage.message}
+                        </div>
+                    )}
                     <div className="d-flex align-items-center justify-content-center" style={{ margin: "10px", padding: "10px" }}>
                         <div className="mx-auto">
                             <figure className="animate__animated animate__fadeIn animated__delay__2" >
@@ -115,4 +78,4 @@ export const Regions = () => {
     );
 }
 
-export default withApiKeyProtection(Regions);
+// export default withApiKeyProtection(Regions);

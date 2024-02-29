@@ -5,7 +5,8 @@ import { CopyOutline } from "react-ionicons";
 import { Link } from "react-router-dom";
 
 export const MyAccount = () => {
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
+    const [flashMessage, setFlashMessage] = useState(null)
     const [copied, setCopied] = useState(false);
     const [userDetails, setUserDetails] = useState({
         firstName: "",
@@ -23,6 +24,13 @@ export const MyAccount = () => {
         }
     }, [user]);
 
+    useEffect(() => {
+        const storedUserDetails = JSON.parse(localStorage.getItem('userDetails'));
+        if (storedUserDetails) {
+            setUserDetails(storedUserDetails);
+        }
+    }, []);
+
     const updateUserData = async () => {
         try {
             const response = await axios.put(`https://mileu.onrender.com/users/${user.id}`, {
@@ -32,14 +40,25 @@ export const MyAccount = () => {
             });
 
             if (response.status === 200) {
-                user(response.data);
-                alert("User details updated successfully!");
+                console.log("Success:", response.data);
+                setUser(response.data);
+                localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                setFlashMessage({
+                    type: "success",
+                    message: "User details updated successfully!",
+                  });
             } else {
-                alert("Failed to update user details");
+                setFlashMessage({
+                    type: "error",
+                    message: "Failed to update user details",
+                  });
             }
         } catch (error) {
             console.error("Error updating user details:", error);
-            alert("An error occurred while updating user details");
+            setFlashMessage({
+                type: "error",
+                message: "An error occurred while updating user details",
+              });
         }
     };
 
@@ -47,6 +66,11 @@ export const MyAccount = () => {
         const { name, value } = e.target;
         setUserDetails(prevState => ({
             ...prevState,
+            [name]: value
+        }));
+
+        localStorage.setItem('userDetails', JSON.stringify({
+            ...userDetails,
             [name]: value
         }));
     };
@@ -114,6 +138,11 @@ export const MyAccount = () => {
                         <h4 className="text-3xl fw-bold mb-3">
                             Personal Information
                         </h4>
+                        {flashMessage && (
+                        <div className={`alert ${flashMessage.type === "success" ? "alert-success" : "alert-danger"}`}>
+                            {flashMessage.message}
+                        </div>
+                        )}
                         <p>
                             First Name: &emsp;
                             <input 

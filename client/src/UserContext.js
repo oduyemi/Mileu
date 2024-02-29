@@ -13,57 +13,57 @@ export const UserProvider = ({ children }) => {
   }); 
 
   // API VALIDATION
-  const validateApiKey = async (apiKey) => {
-    try {
-      const response = await axios.get(`https://mileu.onrender.com/api-key/${apiKey}`, {});
-      console.log(response.data);
+//   const validateApiKey = async (apiKey) => {
+//     try {
+//       const response = await axios.get(`https://mileu.onrender.com/api-key/${apiKey}`, {});
+//       console.log(response.data);
   
-      setApiKey(response.data.api_key); 
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setFlashMessage("Incorrect API key. Sign up to generate API key");
-        setTimeout(() => {
-          setFlashMessage(null);
-          window.location.href = "/signup";
-        }, 2000);
-      } else {
-        console.error("Error validating API key:", error);
-      }
-    }
-  };
+//       setApiKey(response.data.api_key); 
+//     } catch (error) {
+//       if (error.response && error.response.status === 404) {
+//         setFlashMessage("Incorrect API key. Sign up to generate API key");
+//         setTimeout(() => {
+//           setFlashMessage(null);
+//           window.location.href = "/signup";
+//         }, 2000);
+//       } else {
+//         console.error("Error validating API key:", error);
+//       }
+//     }
+//   };
 
-  const handleApiKeyValidated = (requestedPath) => {
-    if (apiKey) {
-      localStorage.setItem("requestedPath", requestedPath); 
-      setApiKeyValidated(true);
-    }
-  };
+//   const handleApiKeyValidated = (requestedPath) => {
+//     if (apiKey) {
+//       localStorage.setItem("requestedPath", requestedPath); 
+//       setApiKeyValidated(true);
+//     }
+//   };
 
-  useEffect(() => {
-    const validateApiKey = async () => {
-        try {
-            await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
-            const requestedPath = localStorage.getItem("requestedPath");
-            if (requestedPath) {
-                window.location.href = requestedPath;
-            }
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            setFlashMessage("Incorrect API key. Sign up to generate API key");
-            setTimeout(() => {
-              setFlashMessage(null);
-              window.location.href = "/signup";
-            }, 2000);
-            } else {
-                console.error("Error validating API key:", error);
-            }
-        }
-    };
+//   useEffect(() => {
+//     const validateApiKey = async () => {
+//         try {
+//             await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
+//             const requestedPath = localStorage.getItem("requestedPath");
+//             if (requestedPath) {
+//                 window.location.href = requestedPath;
+//             }
+//         } catch (error) {
+//           if (error.response && error.response.status === 404) {
+//             setFlashMessage("Incorrect API key. Sign up to generate API key");
+//             setTimeout(() => {
+//               setFlashMessage(null);
+//               window.location.href = "/signup";
+//             }, 2000);
+//             } else {
+//                 console.error("Error validating API key:", error);
+//             }
+//         }
+//     };
 
-    if (apiKey) {
-      validateApiKey();
-    }
-}, [apiKey]);
+//     if (apiKey) {
+//       validateApiKey();
+//     }
+// }, [apiKey]);
 
     // LOGIN VALIDATION
     const handleLogin = async (email, password) => {
@@ -103,17 +103,18 @@ export const UserProvider = ({ children }) => {
       }
     };
   
-    // LOGOUT function
+    // LOGOUT 
     const handleLogout = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      localStorage.removeItem("api_key");
       setUser(null);
       window.location.href = "/";
     };
   
 
   return (
-    <UserContext.Provider value={{ user, setUser, apiKey, setApiKey, flashMessage, handleLogin, handleLogout, handleApiKeyValidated }}>
+    <UserContext.Provider value={{ user, setUser, apiKey, setApiKey, flashMessage, handleLogin, handleLogout }}>
       {children}
     </UserContext.Provider>
   );

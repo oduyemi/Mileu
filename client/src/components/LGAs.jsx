@@ -1,64 +1,36 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
-import withApiKeyProtection from "../WithApiKeyProtection";
 import { ApiKeyForm } from "./ApiKeyForm";
 
 
 export const LGAs = () => {
     const [lgas, setLgas] = useState([]);
     const { apiKey } = useContext(UserContext);
-    const [apiKeyValidated, setApiKeyValidated] = useState(false);
-
-    useEffect(() => {
-        const validateApiKey = async () => {
-            try {
-
-                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
-                handleApiKeyValidated();
-            } catch (error) {
-
-                if (error.response && error.response.status === 404) {
-                   
-                    window.location.href = "/api";
-
-                } else {
-
-                    console.error("Error validating API key:", error);
-
-                }
-            }
-        };
-
-        validateApiKey();
-    }, [apiKey]);
-
-
-    const handleApiKeyValidated = () => {
-        if (apiKey){
-        setApiKeyValidated(true); 
-        }
-    };
 
     useEffect(() => {
         const fetchLgas = async () => {
             try {
+                const storedApiKey = localStorage.getItem("apiKey");
+                if (!storedApiKey) {
+                    window.location.href = "/api";
+                    return;
+                }
+
                 const response = await axios.get("https://mileu.onrender.com/lgas", {
-                    headers: { "Authorization": `Bearer ${apiKey}` }
+                    headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
                 setLgas(response.data);
             } catch (error) {
-                console.error("Error fetching states:", error);
+                console.error("Error fetching LGAs:", error);
             }
         };
 
-        if (apiKeyValidated) { 
-            fetchLgas();
-        }
-    }, [apiKeyValidated, apiKey]);
+        fetchLgas();
+    }, []);
+
     return(
         <div>
-            <ApiKeyForm apiKeyValidated={() => handleApiKeyValidated("/lgas")} />
             <div className="container">
                 <div className="section-title row text-center">
                     <div className="text-center">
@@ -92,4 +64,3 @@ export const LGAs = () => {
     )
 }
 
-export default withApiKeyProtection(LGAs);

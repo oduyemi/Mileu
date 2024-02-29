@@ -7,43 +7,34 @@ export const ApiKeyForm = () => {
     const [apiKey, setApiKey] = useState("");
     const [flashMessage, setFlashMessage] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const { handleApiKeyValidated } = useContext(UserContext);
 
-    const handleApi = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
         try {
             const response = await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`);
-            const responseData = response.data;
-    
             if (response.status === 200) {
-                console.log("Success:", responseData);
-                handleApiKeyValidated(responseData.api_key);
+                localStorage.setItem("apiKey", apiKey, "requestedPath", "/regions");
                 setFlashMessage({
                     type: "success",
                     message: "API Key validated successfully",
                 });
-                setFormSubmitted(true);
+                window.location.href = "/regions";
             } else {
-                console.error("Error:", responseData);
+                console.error("Error validating API key:", response.data);
                 setFlashMessage({
                     type: "error",
-                    message: responseData.detail || "An error occurred during API key validation",
+                    message: "An error occurred during API key validation",
                 });
-                setApiKey("");
-                setFormSubmitted(true);
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error validating API key:", error);
             setFlashMessage({
                 type: "error",
-                message: "An unexpected error occurred. Please try again later.",
+                message: "Error validating API",
             });
-            setFormSubmitted(true);
         }
-    };
-        
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        await handleApi();
+
     };
 
     return (

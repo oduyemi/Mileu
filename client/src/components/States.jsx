@@ -1,65 +1,36 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
-import withApiKeyProtection from "../WithApiKeyProtection";
-import { ApiKeyForm } from "./ApiKeyForm";
+
+
 
 export const States = () => {
     const [states, setStates] = useState([]);
     const { apiKey } = useContext(UserContext);
-    const [apiKeyValidated, setApiKeyValidated] = useState(false);
-
-    useEffect(() => {
-        const validateApiKey = async () => {
-            try {
-
-                await axios.post(`https://mileu.onrender.com/api-key/${apiKey}`, {});
-                handleApiKeyValidated();
-
-            } catch (error) {
-
-                if (error.response && error.response.status === 404) {
-                   
-                    window.location.href = "/api";
-
-                } else {
-
-                    console.error("Error validating API key:", error);
-
-                }
-            }
-        };
-
-        validateApiKey();
-    }, [apiKey]);
-
-
-    const handleApiKeyValidated = () => {
-        if (apiKey){
-        setApiKeyValidated(true); 
-        }
-    };
 
     useEffect(() => {
         const fetchStates = async () => {
             try {
+                const storedApiKey = localStorage.getItem("apiKey");
+                if (!storedApiKey) {
+                    window.location.href = "/api";
+                    return;
+                }
+
                 const response = await axios.get("https://mileu.onrender.com/states", {
-                    headers: { "Authorization": `Bearer ${apiKey}` }
+                    headers: { "Authorization": `Bearer ${storedApiKey}` }
                 });
                 setStates(response.data);
             } catch (error) {
-                console.error("Error fetching states:", error);
+                console.error("Error fetching regions:", error);
             }
         };
-        if (apiKeyValidated) { 
-            fetchStates();
-        }
-    }, [apiKeyValidated, apiKey]);
+
+        fetchStates();
+    }, []);
 
     return (
         <div className="container">
-            <ApiKeyForm apiKeyValidated={() => handleApiKeyValidated("/states")} />
-
             <div className="section-title row text-center">
                 <div className="text-center">
                     <h1 className="text-4l text-center fw-light mt-5 d-inline">
@@ -95,4 +66,4 @@ export const States = () => {
 };
 
 
-export default withApiKeyProtection(States)
+// export default withApiKeyProtection(States)
