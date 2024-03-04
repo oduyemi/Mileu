@@ -33,18 +33,18 @@ export const SignUpForm = () => {
 
             console.log(response.data);
 
-            setApiKey(response.data.apiKey); 
+            setApiKey(response.data.api_key); 
 
             setFlashMessage({
                 type: "success",
-                message: "Registration successful. Your API will appear just once. Copy it now",
+                message: "Registration successful. Your API key is displayed below. Copy it now.",
             });
 
             setFormSubmitted(true);
 
             setTimeout(() => {
                 window.location.href = "/signin";
-            }, 3000);
+            }, 4000);
 
         } catch (error) {
             console.error("Error:", error);
@@ -73,31 +73,31 @@ export const SignUpForm = () => {
                 <h1 className="text-center text-dark text-uppercase mb-2">Sign Up</h1>
                 <form onSubmit={handleSubmit}>
                     {formSubmitted && (
-                    <div>
-                        <div className={`alert ${flashMessage?.type === "success" ? "alert-success" : "alert-danger"}`}>
-                            {flashMessage?.message}
-                                </div>
-                                {apiKey && (
-                                    <div className="mx-auto mb-5">
-                                        <h4 className="text-3xl fw-bold mb-3">
-                                            API Key
-                                        </h4>
-                                        <p className="my-3">
-                                            {apiKey}
-                                            &emsp;
-                                            <span onClick={copyToClipboard} style={{ cursor: "pointer" }}>
-                                                <CopyOutline
-                                                    color={"#ffffff"}
-                                                    height="20px"
-                                                    width="20px"
-                                                />
-                                            </span>
-                                        </p>
-                                        {copied && <p className="text-warning">Copied!</p>}
-                                    </div>
-                                )}
+                        <div>
+                            <div className={`alert ${flashMessage?.type === "success" ? "alert-success" : "alert-danger"}`}>
+                                {flashMessage?.message}
                             </div>
-                        )}
+                            {apiKey && (
+                                <div className="mx-auto mb-5">
+                                    <h4 className="text-3xl fw-bold mb-3">
+                                        API Key
+                                    </h4>
+                                    <p className="my-3">
+                                        {apiKey}
+                                        &emsp;
+                                        <span onClick={copyToClipboard} style={{ cursor: "pointer" }}>
+                                            <CopyOutline
+                                                color={"#023047"}
+                                                height="20px"
+                                                width="20px"
+                                            />
+                                        </span>
+                                    </p>
+                                    {copied && <p className="text-warning">Copied!</p>}
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <div className="mb-2">
                         <label htmlFor="firstName" className="form-label">First Name</label>
                         <input type="text"
