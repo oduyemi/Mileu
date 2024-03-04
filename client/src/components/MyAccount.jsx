@@ -180,25 +180,6 @@ export const MyAccount = () => {
                                 Save Changes
                             </button>
                         </div>
-
-                    </div>
-
-                    <div className="mx-auto mb-5">
-                        <h4 className="text-3xl fw-bold mb-3">
-                            API Key
-                        </h4>
-                        <p className="my-3">
-                            {apiKey.substring(0, 4) + "*****" + apiKey.substring(apiKey.length -3)}
-                            &emsp; 
-                            <span onClick={copyToClipboard} style={{ cursor: "pointer" }}>
-                                <CopyOutline
-                                    color={"#ffffff"}
-                                    height="20px"
-                                    width="20px"
-                                />
-                            </span>
-                        </p>
-                        {copied && <p className="text-warning">Copied!</p>}
                     </div>
                 </div>
             </div>

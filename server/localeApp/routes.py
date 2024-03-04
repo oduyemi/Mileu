@@ -213,7 +213,8 @@ async def register_user(user_request: UserRegistrationRequest, db: Session = Dep
             "firstName": new_user.firstName,
             "lastName": new_user.lastName,
             "email": new_user.email,
-            "token": token
+            "token": token,
+            "api_key": new_user.api_key
         }
 
     except Exception as e:

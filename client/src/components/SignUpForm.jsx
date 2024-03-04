@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
-
+import { CopyOutline } from "react-ionicons";
 
 export const SignUpForm = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +13,8 @@ export const SignUpForm = () => {
     });
     const [flashMessage, setFlashMessage] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [apiKey, setApiKey] = useState(""); 
+    const [copied, setCopied] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,27 +26,29 @@ export const SignUpForm = () => {
             if (formData.password !== formData.confirmPassword) {
                 throw new Error("Passwords do not match");
             }
-    
+
             const response = await axios.post("https://mileu.onrender.com/sign-up", formData, {
                 headers: { "Content-Type": "application/json" }
             });
-    
+
             console.log(response.data);
-    
+
+            setApiKey(response.data.apiKey); 
+
             setFlashMessage({
                 type: "success",
                 message: "Registration successful. Please login to view your API key",
             });
-    
+
             setFormSubmitted(true);
-    
+
             setTimeout(() => {
                 window.location.href = "/signin";
-            }, 2000);
-    
+            }, 3000);
+
         } catch (error) {
             console.error("Error:", error);
-    
+
             let errorMessage;
             if (error.response) {
                 console.log("Response Data:", error.response.data);
@@ -54,9 +57,14 @@ export const SignUpForm = () => {
                 console.error("Request Error:", error.request);
                 errorMessage = "No response received from the server. Please try again later.";
             }
-    
+
             setFlashMessage({ type: "error", message: errorMessage });
         }
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(apiKey);
+        setCopied(true);
     };
 
     return (
@@ -65,54 +73,75 @@ export const SignUpForm = () => {
                 <h1 className="text-center text-dark text-uppercase mb-2">Sign Up</h1>
                 <form onSubmit={handleSubmit}>
                     {formSubmitted && (
+                    <div>
                         <div className={`alert ${flashMessage?.type === "success" ? "alert-success" : "alert-danger"}`}>
                             {flashMessage?.message}
-                        </div>
-                    )}
+                                </div>
+                                {apiKey && (
+                                    <div className="mx-auto mb-5">
+                                        <h4 className="text-3xl fw-bold mb-3">
+                                            API Key
+                                        </h4>
+                                        <p className="my-3">
+                                            {apiKey}
+                                            &emsp;
+                                            <span onClick={copyToClipboard} style={{ cursor: "pointer" }}>
+                                                <CopyOutline
+                                                    color={"#ffffff"}
+                                                    height="20px"
+                                                    width="20px"
+                                                />
+                                            </span>
+                                        </p>
+                                        {copied && <p className="text-warning">Copied!</p>}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     <div className="mb-2">
                         <label htmlFor="firstName" className="form-label">First Name</label>
                         <input type="text"
-                        className="form-control"
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName} 
-                        onChange={handleChange} />
+                            className="form-control"
+                            id="firstName"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange} />
                     </div>
                     <div className="mb-2">
                         <label htmlFor="lastName" className="form-label">Last Name</label>
                         <input type="text"
-                        className="form-control" 
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange} />
+                            className="form-control"
+                            id="lastName"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange} />
                     </div>
                     <div className="mb-2">
                         <label htmlFor="email" className="form-label">Email</label>
                         <input type="email"
-                         className="form-control" 
-                         id="email"
-                         name="email"
-                         value={formData.email}
-                         onChange={handleChange} />
+                            className="form-control"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange} />
                     </div>
                     <div className="mb-2">
                         <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" 
-                        className="form-control" 
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange} />
+                        <input type="password"
+                            className="form-control"
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange} />
                     </div>
                     <div className="mb-2">
                         <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                        <input type="password" 
-                        className="form-control" 
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange} />
+                        <input type="password"
+                            className="form-control"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange} />
                     </div>
                     <div className="mb-2">
                         <button type="submit" className="btn btn-lg btn-warning w-100">Sign Up</button>
@@ -125,4 +154,4 @@ export const SignUpForm = () => {
             </div>
         </div>
     );
-}
+};

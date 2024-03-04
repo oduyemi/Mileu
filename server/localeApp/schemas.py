@@ -21,6 +21,7 @@ class UserRegistrationRequest(BaseModel):
     password: str
     confirmPassword: str
 
+
 class UserLoginRequest(BaseModel):
     email: str
     password: str
