@@ -37,7 +37,7 @@ export const SignUpForm = () => {
 
             setFlashMessage({
                 type: "success",
-                message: "Registration successful. Please login to view your API key",
+                message: "Registration successful. Your API will appear just once. Copy it now",
             });
 
             setFormSubmitted(true);
